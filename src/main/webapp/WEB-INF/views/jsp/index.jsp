@@ -40,8 +40,9 @@
 
 	<div class="row">
 		<div class="col-md-8">
-			<h2>Welcome To cloudcandy.</h2>
-			<h3>Contact @ +91-9597361516 </h3>
+			<h2>Welcome M VINOTH KUMAR.</h2>
+			<h2>Here is our AWS DevOps Project</h2>
+			<h3>Contact @ +91-76399 82272, E-Mail @ vinothvj19@gmail.com </h3>
 		</div>	
 	</div>
 
