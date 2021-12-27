@@ -49,7 +49,7 @@
 
 	<hr>
 	<footer>
-		<p>&copy; cloudcandy 2020</p>
+		<p>&copy; vinothkumarmahendran</p>
 	</footer>
 </div>
 
