@@ -1,40 +1,34 @@
 node{
-     
-    stage('SCM Checkout'){
-        git url: 'https://github.com/MithunTechnologiesDevOps/java-web-app-docker.git',branch: 'master'
+
+    def buildNumber = BUILD_NUMBER
+    stage("SCM Checkout")   {
+      git url: 'https://github.com/vinoyaar/java-web-app-docker.git',branch: 'master'
     }
     
-    stage(" Maven Clean Package"){
-      def mavenHome =  tool name: "Maven-3.5.6", type: "maven"
-      def mavenCMD = "${mavenHome}/bin/mvn"
-      sh "${mavenCMD} clean package"
+    stage("Maven Clean Package"){
+      def mavenHome =  tool name: "Maven", type: "maven"
+      sh "${mavenHome}/bin/mvn clean package"
       
     } 
     
-    
-    stage('Build Docker Image'){
-        sh 'docker build -t dockerhandson/java-web-app .'
+    stage("Build Docker Image"){
+      sh "docker build -t vjcloud/java-web-app-docker:${buildNumber} ."
     }
     
-    stage('Push Docker Image'){
-        withCredentials([string(credentialsId: 'Docker_Hub_Pwd', variable: 'Docker_Hub_Pwd')]) {
-          sh "docker login -u dockerhandson -p ${Docker_Hub_Pwd}"
-        }
-        sh 'docker push dockerhandson/java-web-app'
-     }
+    stage("Docker Login and Push"){
+      withCredentials([string(credentialsId: 'docker_hub_password', variable: 'docker_hub_password')]) {
+        sh "docker login -u vjcloud -p ${docker_hub_password}"
+      }
+      
+      sh "docker push vjcloud/java-web-app-docker:${buildNumber}"
+    }
      
-      stage('Run Docker Image In Dev Server'){
+    stage('Run Docker Image Container in Dev Server'){
         
-        def dockerRun = ' docker run  -d -p 8080:8080 --name java-web-app dockerhandson/java-web-app'
-         
-         sshagent(['DOCKER_SERVER']) {
-          sh 'ssh -o StrictHostKeyChecking=no ubuntu@172.31.20.72 docker stop java-web-app || true'
-          sh 'ssh  ubuntu@172.31.20.72 docker rm java-web-app || true'
-          sh 'ssh  ubuntu@172.31.20.72 docker rmi -f  $(docker images -q) || true'
-          sh "ssh  ubuntu@172.31.20.72 ${dockerRun}"
+       sshagent(['docker_ssh_password']) {
+          sh "ssh -o StrictHostKeyChecking=no ubuntu@172.31.17.122 docker rm -f javawebappcont || true"
+ 
+          sh "ssh -o StrictHostKeyChecking=no ubuntu@172.31.17.122 docker run -d -p 8080:8080 --name javawebappcont vjcloud/java-web-app-docker:${buildNumber}"           
+          }
        }
-       
-    }
-     
-     
-}
+ } 
