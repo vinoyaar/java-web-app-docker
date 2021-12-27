@@ -14,7 +14,7 @@ public class HelloWorldService {
 
 		logger.debug("getDesc() is executed!");
 
-		return "Maven + Spring MVC + Jenkins + Docker Example";
+		return "Here is our AWS DevOps Project";
 
 	}
 
@@ -25,7 +25,7 @@ public class HelloWorldService {
 		if(StringUtils.isEmpty(name)){
 			return "Hello";
 		}else{
-			return "Hello " + name;
+			return "Hi Karthick" + name;
 		}
 		
 	}
